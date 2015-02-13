@@ -4,8 +4,20 @@ from random import shuffle, randint
 '''
 This Python script was created by Martha Hinrichs in 2014
 Use this script to create a text file to be imported to Qualtrics.
-The resulting script will create blocks beginning with between 1 and
-max_count filler items, then one prime item and one target item.
+The resulting script will create blocks in the following format:
+
+	[[Block:Block_Name]]
+	[[Question:TextEntry:form]]
+	<<first filler item>>
+
+	[[PageBreak]]
+	[[Question:TextEntry:form]]
+	<<prime item>>
+
+	[[PageBreak]]
+	[[Question:TextEntry:form]]
+	<<target item>>
+
 Blocks should then be moved around on Qualtrics in the Survey Flow.
 '''
 
@@ -18,11 +30,13 @@ def main():
 	fillers = 46 
 	# max number of fillers between target trials
 	max_count = 3
+	# Number of different filler versions we want:
+	filler_versions = 3
 
 	create_script(versions, blocks, fillers, max_count)
 
 
-def create_script(versions, blocks, fillers, max_count):
+def create_script(versions, blocks, fillers, max_count, filler_versions):
 	# Data structure to fill with information from excel
 	items = {}
 	# open the csv data in universal newline mode
@@ -44,16 +58,16 @@ def create_script(versions, blocks, fillers, max_count):
 		for row in csv.reader(format):
 			order.append(row)
 
-	# Number of different filler versions we want:
-	filler_versions = 3
-
 	# Final string to be printed to text file when finished
 	mystring = "[[AdvancedFormat]]\n[[ED:State]]\n[[ED:Gender]]\n[[ED:SawSurvey:1]]\n"
 
+	# Create different versions 
 	for i in range(filler_versions):
 		fillerList = get_fillers(blocks, fillers, max_count)
+		# for each filler version, create a list of blocks 1_1-27, 2_1-27, 3_1-27
 		for j in range(len(order)):
 			block = order[j]
+			# x is the number 1-27, will be repeated <versions> number of times
 			x = j%(len(order)/versions)
 			# First item in list 'block' is block name
 			mystring += "[[Block:%s]]\n" %block[0]
