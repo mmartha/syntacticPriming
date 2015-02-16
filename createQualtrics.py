@@ -33,7 +33,7 @@ def main():
 	# Number of different filler versions we want:
 	filler_versions = 3
 
-	create_script(versions, blocks, fillers, max_count)
+	create_script(versions, blocks, fillers, max_count, filler_versions)
 
 
 def create_script(versions, blocks, fillers, max_count, filler_versions):
